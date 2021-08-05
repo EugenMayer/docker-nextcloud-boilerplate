@@ -1,8 +1,10 @@
 # WAT
 
-This boilerplate focuses on providing a simple, less technical way to run nextcloud on docker with SSL.
-It includes SSL support via LE via Traefik (either via http or dns challenge). It should be production ready.
+This boilerplate focuses on providing a simple way to run nextcloud on docker with SSL.
+- It includes: postgres 13 and redis for production setups.
+- It includes SSL support via LetsEncrypt using Traefik (either via http or dns challenge). 
 
+It should be production ready.
 Setup time: 1 minute
 
 # Usage
