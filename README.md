@@ -42,37 +42,6 @@ That's it - now connect to `https://mynextcloud.lan` or whatever you picked as t
 
 You will have issues with logging redirects, please continue to `Finalize/Hardening`.
 
-## SSL with traefik
-
-#### HTTP-01 (default)
-
-To be able to run nextcloud behind SSL using LetsEncrypt without any big effort, you can use the `traefik` integration.
-The default configuration is already using
-
-```
-COMPOSE_FILE=docker-compose.yml:docker-compose-traefik-http.yml
-```
-
-Now you can already connect using `https://nextcloud.tld` and in addition requests to `http://nextcloud.tld` are already
-redirected to `https://nextcloud.tld` automatically. Neat
-
-#### DNS-01 (alternative for e.g. private/isolated networks)
-
-Or for the DNS-01 variant you will need to add another 2 variables (this example is for cloudflare)
-
-`vim .env`
-
-```
-# this is needed to enable the extra traefik service
-COMPOSE_FILE=docker-compose.yml:docker-compose-traefik-dns.yml
-TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER=cloudflare
-TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS=CF_DNS_API_TOKEN=<YOURTOKEN>
-```
-
-```
-docker-compose up
-```
-
 ## Finalize / Hardening (important)
 
 Most of the things like `sts` we already could fix using traefik label annotations. But there are additional things
@@ -110,14 +79,47 @@ So add this 2 lines while using your configured domain, again `/var/www/htmlconf
 
 In `/var/www/htmlconfig/config.php` adjust `overwrite.cli.url` and fix the protocol from `http` to `https`.
 
-# Data
+# Advanced topics
 
-## Volumes
+## SSL advanced
+
+### HTTP-01 (default)
+
+To be able to run nextcloud behind SSL using LetsEncrypt without any big effort, you can use the `traefik` integration.
+The default configuration is already using
+
+```
+COMPOSE_FILE=docker-compose.yml:docker-compose-traefik-http.yml
+```
+
+Now you can already connect using `https://nextcloud.tld` and in addition requests to `http://nextcloud.tld` are already
+redirected to `https://nextcloud.tld` automatically. Neat
+
+### DNS-01 (alternative for e.g. private/isolated networks)
+
+Or for the DNS-01 variant you will need to add another 2 variables (this example is for cloudflare)
+
+`vim .env`
+
+```
+# this is needed to enable the extra traefik service
+COMPOSE_FILE=docker-compose.yml:docker-compose-traefik-dns.yml
+TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER=cloudflare
+TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS=CF_DNS_API_TOKEN=<YOURTOKEN>
+```
+
+```
+docker-compose up
+```
+
+## Data
+
+## a Volumes
 
 You nextcloud data is on the volume `data`
 The database is located in the named volume `db`
 
-# Update
+## Update
 
 This will update the wordpress / mysql image and restart your stack if there have been any. This will never delete
 any of your data, plugins, themes or database ( what so ever )
