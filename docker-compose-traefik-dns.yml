@@ -2,12 +2,17 @@ version: '3.3'
 services:
   app:
     labels:
-      traefik.http.routers.nextcloud-app.rule: "Host(`${DOMAIN}`)"
-      traefik.http.routers.nextcloud-app.tls: "true"
-      traefik.http.routers.nextcloud-app.tls.certresolver: "default"
-      traefik.http.routers.nextcloud-app-secure.middlewares: "nextcloud-dav,secHeaders@file"
-      traefik.http.middlewares.nextcloud-dav.replacepathregex.regex: "^/.well-known/ca(l|rd)dav"
-      traefik.http.middlewares.nextcloud-dav.replacepathregex.replacement: "/remote.php/dav/"
+      traefik.http.routers.nextcloud-app.rule: 'Host(`${DOMAIN}`)'
+      traefik.http.routers.nextcloud-app.tls: 'true'
+      traefik.http.routers.nextcloud-app.tls.certresolver: 'default'
+      traefik.http.routers.nextcloud-app.middlewares: 'nextcloud-dav,nextcloud-security'
+      traefik.http.middlewares.nextcloud-security.headers.customFrameOptionsValue: 'SAMEORIGIN'
+      traefik.http.middlewares.nextcloud-security.headers.framedeny: 'true'
+      traefik.http.middlewares.nextcloud-security.headers.stsIncludeSubdomains: 'true'
+      traefik.http.middlewares.nextcloud-security.headers.stsPreload: 'true'
+      traefik.http.middlewares.nextcloud-security.headers.stsSeconds: 15552000
+      traefik.http.middlewares.nextcloud-dav.replacepathregex.regex: '^/.well-known/ca(l|rd)dav'
+      traefik.http.middlewares.nextcloud-dav.replacepathregex.replacement: '/remote.php/dav/'
   traefik:
     image: eugenmayer/traefik:2.x
     restart: always
@@ -17,8 +22,8 @@ services:
     environment:
       TRAEFIK_ACME_ENABLE: 'true'
       TRAEFIK_ACME_CHALLENGE: 'dns'
-      TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER: "${TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER}"
-      TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS: "${TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS}"
+      TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER: '${TRAEFIK_ACME_CHALLENGE_DNS_PROVIDER}'
+      TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS: '${TRAEFIK_ACME_CHALLENGE_DNS_CREDENTIALS}'
       TRAEFIK_HTTPS_ENABLE: 'only'
       TRAEFIK_DOCKER_ENABLE: 'true'
     volumes:
@@ -27,7 +32,7 @@ services:
       - acme:/mnt/acme
       # mount our docker socket so our docker container can be discovered
       - /var/run/docker.sock:/var/run/docker.sock
-      
+
 volumes:
   certs:
   filestorage:
