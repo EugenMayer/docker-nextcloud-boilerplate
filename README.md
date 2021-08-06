@@ -38,6 +38,8 @@ docker-compose up
 
 That's it - now connect to `https://mynextcloud.lan` or whatever you picked as the domain.
 
+**Hint**: You might land on `index.php` after installation (without domain) - just retype the domain. Seems to be a wrong rediredct initially.
+
 ## SSL with traefik
 
 #### HTTP-01 (default)
