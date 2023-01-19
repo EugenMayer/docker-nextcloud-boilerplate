@@ -119,20 +119,20 @@ docker-compose up
 You nextcloud data is on the volume `data`
 The database is located in the named volume `db`
 
-## Update
+## Update / upgrade
 
-This will update the wordpress / mysql image and restart your stack if there have been any. This will never delete
-any of your data, plugins, themes or database ( what so ever )
+Ensure you set the VERSION in your `.env` file to something that is at most one major version away from your current. Then update one by one using `./occ upgrade`
 
-just run
+
+just run to pull and star the new images
 
 ```bash
 ./update.sh
 ```
 
-or manually
-
 ```bash
-docker-compose pull
-./start.sh
+docker-compose exec -u www-data app
+cd /var/www/html
+./occ upgrade
 ```
+
