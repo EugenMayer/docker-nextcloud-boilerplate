@@ -16,7 +16,7 @@ services:
     command: redis-server --requirepass ${REDIS_PW} # Redis Passwort eingeben
   app:
     # see https://hub.docker.com/_/nextcloud
-    image: nextcloud
+    image: nextcloud:${VERSION:-latest}
     restart: unless-stopped
     depends_on:
       - db
