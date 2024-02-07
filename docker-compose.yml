@@ -1,7 +1,6 @@
-version: '3.3'
 services:
   db:
-    image: postgres:13
+    image: postgres:${PG_VERSION:-13}
     restart: unless-stopped
     volumes:
       - db:/var/lib/postgresql/data
