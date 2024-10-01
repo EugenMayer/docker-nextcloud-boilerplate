@@ -121,18 +121,23 @@ The database is located in the named volume `db`
 
 ## Update / upgrade
 
+Important, upgrade one majar at a time. So if you upgrade from 25-29, you need to first upgrade to 26, then 27, then 28 - you get it.
+
 Ensure you set the VERSION in your `.env` file to something that is at most one major version away from your current. Then update one by one using `./occ upgrade`
 
-
-just run to pull and star the new images
+Now replace the docker image with then new nextcloud version
 
 ```bash
 ./update.sh
 ```
 
+Now finish / run the actual software updates
+
 ```bash
-docker-compose exec -u www-data app
+docker-compose exec -u www-data app bash
 cd /var/www/html
 ./occ upgrade
+# run scheduled upgrades
+php -f /var/www/html/cron.php
 ```
 
