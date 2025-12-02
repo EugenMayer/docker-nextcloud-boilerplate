@@ -27,10 +27,50 @@ services:
       POSTGRES_PASSWORD: ${DB_PW}
       REDIS_HOST: redis
       REDIS_HOST_PASSWORD: ${REDIS_PW} # Redis Passwort von oben wieder eingeben
+    labels:
+      traefik.http.routers.nextcloud.rule: 'Host(`${DOMAIN}`)'
+      traefik.http.routers.nextcloud.service: app
+      traefik.http.routers.nextcloud.tls: true
+      traefik.http.routers.nextcloud.tls.certresolver: letsencrypt
+      traefik.http.routers.nextcloud.tls.middlewares: 'nextcloud-dav,nextcloud-security'
+      traefik.http.services.nextcloud.loadbalancer.server.scheme: http
+      traefik.http.services.nextcloud.loadbalancer.server.port: 80
+      traefik.http.middlewares.nextcloud-security.headers.customFrameOptionsValue: 'SAMEORIGIN'
+      traefik.http.middlewares.nextcloud-security.headers.framedeny: 'true'
+      traefik.http.middlewares.nextcloud-security.headers.stsIncludeSubdomains: 'true'
+      traefik.http.middlewares.nextcloud-security.headers.stsPreload: 'true'
+      traefik.http.middlewares.nextcloud-security.headers.stsSeconds: 15552000
+      traefik.http.middlewares.nextcloud-dav.replacepathregex.regex: '^/.well-known/ca(l|rd)dav'
+      traefik.http.middlewares.nextcloud-dav.replacepathregex.replacement: '/remote.php/dav/'
     volumes:
       - app:/var/www/html
       - data:/var/www/html/data
+  traefik:
+    image: traefik:v3.6
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesResolvers.letsencrypt.acme.email=ssl@kontextwork.de"
+      - "--certificatesResolvers.letsencrypt.acme.storage=acme.json"
+      - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.provider=cloudflare"
+      - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53"
+    environment:
+      CF_DNS_API_TOKEN: ${TRAEFIK_CF_API_TOKEN}
+    ports:
+      # not needed, we use the dns challenge
+      #- "80:80"
+      - "443:443"
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
 volumes:
   app:
   data:
   db:
+  certs:
+  filestorage:
+  acme:
