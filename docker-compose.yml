@@ -28,6 +28,7 @@ services:
       REDIS_HOST: redis
       REDIS_HOST_PASSWORD: ${REDIS_PW} # Redis Passwort von oben wieder eingeben
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.nextcloud.rule='Host(`${DOMAIN}`)'"
       - "traefik.http.routers.nextcloud.service=app"
       - "traefik.http.routers.nextcloud.tls=true"
