@@ -33,7 +33,7 @@ services:
       - "traefik.http.routers.nextcloud.service=app"
       - "traefik.http.routers.nextcloud.tls=true"
       - "traefik.http.routers.nextcloud.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.nextcloud.tls.middlewares=nextcloud-dav,nextcloud-security"
+      #- "traefik.http.routers.nextcloud.tls.middlewares=nextcloud-dav,nextcloud-security"
       - "traefik.http.services.nextcloud.loadbalancer.server.scheme=http"
       - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
       #- "traefik.http.middlewares.nextcloud-security.headers.customFrameOptionsValue=SAMEORIGIN"
