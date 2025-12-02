@@ -28,20 +28,20 @@ services:
       REDIS_HOST: redis
       REDIS_HOST_PASSWORD: ${REDIS_PW} # Redis Passwort von oben wieder eingeben
     labels:
-      traefik.http.routers.nextcloud.rule: 'Host(`${DOMAIN}`)'
-      traefik.http.routers.nextcloud.service: app
-      traefik.http.routers.nextcloud.tls: true
-      traefik.http.routers.nextcloud.tls.certresolver: letsencrypt
-      traefik.http.routers.nextcloud.tls.middlewares: 'nextcloud-dav,nextcloud-security'
-      traefik.http.services.nextcloud.loadbalancer.server.scheme: http
-      traefik.http.services.nextcloud.loadbalancer.server.port: 80
-      traefik.http.middlewares.nextcloud-security.headers.customFrameOptionsValue: 'SAMEORIGIN'
-      traefik.http.middlewares.nextcloud-security.headers.framedeny: 'true'
-      traefik.http.middlewares.nextcloud-security.headers.stsIncludeSubdomains: 'true'
-      traefik.http.middlewares.nextcloud-security.headers.stsPreload: 'true'
-      traefik.http.middlewares.nextcloud-security.headers.stsSeconds: 15552000
-      traefik.http.middlewares.nextcloud-dav.replacepathregex.regex: '^/.well-known/ca(l|rd)dav'
-      traefik.http.middlewares.nextcloud-dav.replacepathregex.replacement: '/remote.php/dav/'
+      - "traefik.http.routers.nextcloud.rule='Host(`${DOMAIN}`)'"
+      - "traefik.http.routers.nextcloud.service=app"
+      - "traefik.http.routers.nextcloud.tls=true"
+      - "traefik.http.routers.nextcloud.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.nextcloud.tls.middlewares='nextcloud-dav,nextcloud-security'"
+      - "traefik.http.services.nextcloud.loadbalancer.server.scheme=http"
+      - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.nextcloud-security.headers.customFrameOptionsValue='SAMEORIGIN'"
+      - "traefik.http.middlewares.nextcloud-security.headers.framedeny='true'"
+      - "traefik.http.middlewares.nextcloud-security.headers.stsIncludeSubdomains='true'"
+      - "traefik.http.middlewares.nextcloud-security.headers.stsPreload='true'"
+      - "traefik.http.middlewares.nextcloud-security.headers.stsSeconds=15552000"
+      - "traefik.http.middlewares.nextcloud-dav.replacepathregex.regex='^/.well-known/ca(l|rd)dav'"
+      - "traefik.http.middlewares.nextcloud-dav.replacepathregex.replacement='/remote.php/dav/'"
     volumes:
       - app:/var/www/html
       - data:/var/www/html/data
