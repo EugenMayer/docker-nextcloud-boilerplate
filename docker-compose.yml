@@ -55,7 +55,7 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesResolvers.letsencrypt.acme.email=ssl@kontextwork.de"
-      - "--certificatesResolvers.letsencrypt.acme.storage=acme.json"
+      - "--certificatesResolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.provider=cloudflare"
       - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53"
     environment:
@@ -67,6 +67,7 @@ services:
       - "127.0.0.1:8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - letsencrypt:/letsencrypt
 
 volumes:
   app:
@@ -74,4 +75,4 @@ volumes:
   db:
   certs:
   filestorage:
-  acme:
+  letsencrypt:
